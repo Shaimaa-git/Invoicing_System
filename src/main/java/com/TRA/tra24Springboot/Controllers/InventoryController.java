@@ -31,7 +31,15 @@ public class InventoryController {
     }
     @GetMapping("report")
     public  Inventory reportInventory(){
+
         return  globalInventoryItem;
     }
-
+    @PostMapping("write-off")
+    public Inventory writeOffInventory(@RequestBody Inventory inventoryItem) {
+        inventoryItem.setIsActive(Boolean.FALSE);
+        inventoryItem.setUpdatedDate(new Date());
+        inventoryItem.setWriteOffDate(new Date());
+        globalInventoryItem = inventoryItem;
+        return inventoryItem;
+    }
 }
