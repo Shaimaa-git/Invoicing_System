@@ -1,13 +1,10 @@
 package com.TRA.tra24Springboot.Controllers;
-
-import com.TRA.tra24Springboot.Models.ContactDetails;
 import com.TRA.tra24Springboot.Models.Inventory;
-import com.TRA.tra24Springboot.Models.Product;
-import com.TRA.tra24Springboot.Models.Supplier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
+
+
 
 @RestController
 @RequestMapping("/inventory")
@@ -29,10 +26,14 @@ public class InventoryController {
         globalInventoryItem = inventoryItem;
         return inventoryItem;
     }
-    @GetMapping("report")
-    public  Inventory reportInventory(){
+    @PostMapping("return")
+    public Inventory returnStock(@RequestBody Inventory inventoryItem) {
 
-        return  globalInventoryItem;
+        inventoryItem.setId(1);
+        inventoryItem.setUpdatedDate(new Date());
+
+        globalInventoryItem = inventoryItem;
+        return inventoryItem;
     }
     @PostMapping("write-off")
     public Inventory writeOffInventory(@RequestBody Inventory inventoryItem) {
