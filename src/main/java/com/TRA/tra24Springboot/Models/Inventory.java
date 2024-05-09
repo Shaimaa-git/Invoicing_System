@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -20,6 +21,7 @@ public class Inventory extends BaseEntity {
     String phoneNumber;
     String openingHours;
     String closingHours;
+    Date WriteOffDate;
 
 
 
