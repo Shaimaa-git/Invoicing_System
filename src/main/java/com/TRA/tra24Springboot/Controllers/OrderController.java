@@ -1,8 +1,10 @@
 package com.TRA.tra24Springboot.Controllers;
 
+import com.TRA.tra24Springboot.Repository.OrderRepository;
 import com.TRA.tra24Springboot.Models.Order;
 import com.TRA.tra24Springboot.Models.OrderStatus;
 import com.TRA.tra24Springboot.Models.PaymentStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -10,18 +12,20 @@ import java.util.Date;
 @RestController
 @RequestMapping("/order")
 public class OrderController {
+    @Autowired
+    OrderRepository orderRepository;
     @PostMapping("create")
     public Order createOrder(@RequestBody Order order) {
 
         order.setOrderDate(new Date());
         order.setStatus(OrderStatus.IN_PROGRESS);
         order.setPaymentStatus(PaymentStatus.PAID);
-        return order;
+        return orderRepository.save(order);
     }
     @PutMapping("/update")
     public Order updateOrder(@RequestBody Order order) {
         order.setOrderDate(new Date());
-        return order;
+        return orderRepository.save(order);
     }
     @PostMapping("/cancel/{orderId}")
     public String cancelOrder(@PathVariable("orderId") String orderId,Order order) {

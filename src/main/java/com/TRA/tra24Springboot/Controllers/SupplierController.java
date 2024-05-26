@@ -1,22 +1,23 @@
 package com.TRA.tra24Springboot.Controllers;
 
+import com.TRA.tra24Springboot.Repository.SupplierRepository;
 import com.TRA.tra24Springboot.Models.ContactDetails;
 import com.TRA.tra24Springboot.Models.Supplier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
 @RestController
-@RequestMapping("/supplier")
+@RequestMapping("supplier")
 public class SupplierController {
-
+    @Autowired
+    SupplierRepository supplierRepository;
     Supplier supplier = new Supplier();
 
     @PostMapping("add")
     public Supplier addSupplier(@RequestBody Supplier supplierDetails) {
         supplierDetails.setShippingMethods("Air freight");
-
-
         supplierDetails.setIsActive(Boolean.TRUE);
         supplierDetails.setCreatedDate(new Date());
         supplierDetails.setUpdatedDate(new Date());
@@ -29,7 +30,7 @@ public class SupplierController {
         supplierDetails.setNextDeliveryTime(new Date());
 
         supplier = supplierDetails;
-        return supplierDetails;
+        return supplierRepository.save(supplierDetails);
     }
 
     @PutMapping("update")
@@ -43,7 +44,7 @@ public class SupplierController {
         supplierUpdating.setUpdatedDate(new Date());
 
         supplier = supplierUpdating;
-        return supplierUpdating;
+        return supplierRepository.save(supplierUpdating);
     }
 
     @PostMapping("delete/{id}")
@@ -53,6 +54,11 @@ public class SupplierController {
             System.out.println(supplier.toString());
         }
         return "Success!";
+    }
+    @GetMapping("get")
+    public Supplier reportSupplier(){
+
+        return supplierRepository.save(supplier);
     }
 }
 
