@@ -38,6 +38,14 @@ public class ProductService {
         productRepository.save(productFromDb);
         return "Success";
     }
+    public String deleteProductByColor(Integer productColor){
+
+        Product productFromDb = productRepository.getProductById(productColor);
+        productFromDb.setIsActive(Boolean.FALSE);
+        productRepository.save(productFromDb);
+        return "Success";
+    }
+
 
     public String updateProductQuantity(Integer productId, Integer quantity) {
         Product productFromDb = productRepository.getProductById(productId);

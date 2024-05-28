@@ -20,13 +20,15 @@ public class ProductController {
 
         return productService.saveProduct(product);
     }
-    @PostMapping("delete")
-    public String deleteProduct(Integer productId){
-        Product productFromDb = productRepository.getProductById(productId);
-        productFromDb.setIsActive(Boolean.FALSE);
-        productRepository.save(productFromDb);
-        return "Success";
+    @PostMapping("deleteById")
+    public String deleteProductById(@RequestParam Integer productId){
+        return productService.deleteProductById(productId);
     }
+    @PostMapping("deleteByName")
+    public String deleteProductByName(@RequestParam Integer productName){
+        return productService.deleteProductById(productName);
+    }
+
     @PostMapping("update")
     public Product updateProduct(Product product){
         product.setUpdatedDate(new Date());

@@ -13,4 +13,7 @@ public interface ProductRepository extends JpaRepository<Product , Integer> {
 
     @Query("SELECT p from Product p WHERE p.id =:productId")
     Product getProductById( @Param("productId") Integer ProductId );
+
+    @Query("SELECT p from Product p WHERE p.color =:productColor")
+    Product getProductByColor(@Param("productColor") Integer productColor);
 }
