@@ -4,6 +4,7 @@ import com.TRA.tra24Springboot.Repository.OrderRepository;
 import com.TRA.tra24Springboot.Models.Order;
 import com.TRA.tra24Springboot.Models.OrderStatus;
 import com.TRA.tra24Springboot.Models.PaymentStatus;
+import com.TRA.tra24Springboot.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,30 +14,18 @@ import java.util.Date;
 @RequestMapping("/order")
 public class OrderController {
     @Autowired
-    OrderRepository orderRepository;
+    OrderService orderService;
     @PostMapping("create")
     public Order createOrder(@RequestBody Order order) {
 
-        order.setOrderDate(new Date());
-        order.setStatus(OrderStatus.IN_PROGRESS);
-        order.setPaymentStatus(PaymentStatus.PAID);
-        return orderRepository.save(order);
+        return orderService.createOrder(order);
     }
     @PutMapping("/update")
     public Order updateOrder(@RequestBody Order order) {
-        order.setOrderDate(new Date());
-        return orderRepository.save(order);
+        return orderService.updateOrder(order);
     }
     @PostMapping("/cancel/{orderId}")
-    public String cancelOrder(@PathVariable("orderId") String orderId,Order order) {
-        if (order != null && order.getStatus() == OrderStatus.IN_PROGRESS) {
-            order.setStatus(OrderStatus.CANCELED);
-            if (order.getPaymentStatus() == PaymentStatus.PAID) {
-                order.setPaymentStatus(PaymentStatus.REJECTED);
-            }
-            return "Order with ID " + orderId + " has been canceled.";
-        } else {
-            return "Unable to cancel order. Order may not exist or may not be cancelable.";
-        }
+    public String cancelOrder(Integer orderId) {
+        return orderService.cancelOrder(orderId);
     }
 }
