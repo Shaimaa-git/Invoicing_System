@@ -23,4 +23,5 @@ public class ProductDetailsService {
         productDetails.setPrice(10.0);
         return productsDetailsRepository.save(productDetails);
     }
+
 }

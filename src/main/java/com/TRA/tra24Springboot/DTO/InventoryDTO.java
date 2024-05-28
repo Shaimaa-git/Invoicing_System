@@ -10,12 +10,14 @@ import java.util.List;
 @Data
 public class InventoryDTO {
     Integer inventoryId;
-    List<Product> products;
+    List<ProductDTO>products;;
     String location;
+
+    ProductDTO productDTO;
     public static InventoryDTO convertToDTO(Inventory inventory) {
         InventoryDTO inventoryDTO=new InventoryDTO();
         inventoryDTO.setLocation(inventory.getLocation());
-        inventoryDTO.setProducts(inventory.getProducts());
+        inventoryDTO.setProducts(ProductDTO.convertToDTO(inventory.getProducts()));
         inventoryDTO.setInventoryId(inventory.getId());
 
         return inventoryDTO;
