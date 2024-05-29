@@ -38,9 +38,9 @@ public class ProductService {
         productRepository.save(productFromDb);
         return "Success";
     }
-    public String deleteProductByColor(Integer productColor){
+    public String deleteProductByName(String productName){
 
-        Product productFromDb = productRepository.getProductById(productColor);
+        Product productFromDb = productRepository.getByProductName(productName);
         productFromDb.setIsActive(Boolean.FALSE);
         productRepository.save(productFromDb);
         return "Success";
