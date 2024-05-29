@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
-    @Query("SELECT p from Inventory p WHERE p.Inventory.Id =:inventoryId")
+    @Query("SELECT i from Inventory i WHERE i.Id =:inventoryId")
     Inventory getByInventoryId(@Param("inventoryId") Integer inventoryId);
 }
