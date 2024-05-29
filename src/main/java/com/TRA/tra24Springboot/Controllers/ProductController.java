@@ -1,6 +1,5 @@
 package com.TRA.tra24Springboot.Controllers;
 
-import com.TRA.tra24Springboot.Repository.ProductRepository;
 import com.TRA.tra24Springboot.Models.Product;
 import com.TRA.tra24Springboot.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,7 @@ import java.util.Date;
 public class ProductController {
     @Autowired
     ProductService productService;
-    @Autowired
-    ProductRepository productRepository;
+
     @PostMapping("add")
     public Product addProduct(@RequestBody Product product){
 
@@ -25,13 +23,13 @@ public class ProductController {
         return productService.deleteProductById(productId);
     }
     @PostMapping("deleteByName")
-    public String deleteProductByName(@RequestParam Integer productName){
-        return productService.deleteProductById(productName);
+    public String deleteProductByName(@RequestParam String productName){
+        return productService.deleteProduct(productName);
     }
 
     @PostMapping("update")
-    public Product updateProduct(Product product){
+    public String updateProduct(Product product){
         product.setUpdatedDate(new Date());
-        return productService.updateProduct(product);
+        return productService.updateProductQuantity(product.getId(), product.getQuantity());
     }
 }
