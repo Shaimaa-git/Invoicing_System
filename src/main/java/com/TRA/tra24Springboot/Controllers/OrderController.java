@@ -6,6 +6,8 @@ import com.TRA.tra24Springboot.Models.OrderStatus;
 import com.TRA.tra24Springboot.Models.PaymentStatus;
 import com.TRA.tra24Springboot.Services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -25,7 +27,12 @@ public class OrderController {
         return orderService.updateOrder(order);
     }
     @PostMapping("/cancel/{orderId}")
-    public String cancelOrder(Integer orderId) {
-        return orderService.cancelOrder(orderId);
+    public <T> ResponseEntity<T> deleteOrderById(@RequestParam Integer id) throws Exception {
+        try {
+            String result = orderService.cancelOrder(id);
+            return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return (ResponseEntity<T>) new ResponseEntity<>("Deleting failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
