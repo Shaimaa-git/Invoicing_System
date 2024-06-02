@@ -13,7 +13,6 @@ import java.util.Date;
 public class InventoryController {
     @Autowired
     InventoryService inventoryService;
-    private Inventory globalInventoryItem = new Inventory();
 
     @PostMapping("receive")
     public Inventory receiveStock(@RequestBody Inventory inventoryItem) {
