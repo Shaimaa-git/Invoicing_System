@@ -13,6 +13,7 @@ public class slackController {
     SlackService slackService;
     @GetMapping("messages")
     public void sendMessage(){
+
         slackService.sendMessage("", "");
     }
 
