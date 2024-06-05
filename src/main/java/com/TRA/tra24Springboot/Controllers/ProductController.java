@@ -1,6 +1,7 @@
 package com.TRA.tra24Springboot.Controllers;
 
 import com.TRA.tra24Springboot.Models.Product;
+import com.TRA.tra24Springboot.Services.MailingService;
 import com.TRA.tra24Springboot.Services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +16,12 @@ import java.util.Date;
 public class ProductController {
     @Autowired
     ProductService productService;
+    @Autowired
+    MailingService mailingService;
 
     @PostMapping("add")
     public Product addProduct(@RequestBody Product product){
+        mailingService.sendSimpleMail();
 
         return productService.saveProduct(product);
     }
@@ -45,4 +49,5 @@ public class ProductController {
         product.setUpdatedDate(new Date());
         return productService.updateProductQuantity(product.getId(), product.getQuantity());
     }
+
 }
