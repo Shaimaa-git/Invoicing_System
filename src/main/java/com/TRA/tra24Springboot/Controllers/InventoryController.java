@@ -17,9 +17,15 @@ public class InventoryController {
     InventoryService inventoryService;
 
     @PostMapping("receive")
-    public Inventory receiveStock(@RequestBody Inventory inventoryItem) {
-
-        return inventoryService.saveReceiveStock(inventoryItem);
+    public ResponseEntity<Inventory> receiveStock(@RequestBody Inventory inventoryItem) {
+        try {
+            Inventory savedItem = inventoryService.saveReceiveStock(inventoryItem);
+            return new ResponseEntity<>(savedItem, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error saving received stock: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PostMapping("return")
     public Inventory returnStock(@RequestBody Inventory inventoryItem) {
