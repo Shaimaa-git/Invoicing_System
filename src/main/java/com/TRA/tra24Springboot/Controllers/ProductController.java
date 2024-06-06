@@ -52,9 +52,16 @@ public class ProductController {
     }
 
     @PostMapping("update")
-    public String updateProduct(Product product){
-        product.setUpdatedDate(new Date());
-        return productService.updateProductQuantity(product.getId(), product.getQuantity());
+    public ResponseEntity<String> updateProduct(@RequestBody Product product) {
+        try {
+            product.setUpdatedDate(new Date());
+            String result = productService.updateProductQuantity(product.getId(), product.getQuantity());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error updating product: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
