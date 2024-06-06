@@ -28,9 +28,15 @@ public class InventoryController {
         }
     }
     @PostMapping("return")
-    public Inventory returnStock(@RequestBody Inventory inventoryItem) {
-
-        return inventoryService.saveReturnStock(inventoryItem);
+    public ResponseEntity<Inventory> returnStock(@RequestBody Inventory inventoryItem) {
+        try {
+            Inventory savedItem = inventoryService.saveReturnStock(inventoryItem);
+            return new ResponseEntity<>(savedItem, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error saving returned stock: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PostMapping("write-off")
     public <T> ResponseEntity<T> deleteInventoryById(@RequestParam Integer inventoryId) throws Exception {
