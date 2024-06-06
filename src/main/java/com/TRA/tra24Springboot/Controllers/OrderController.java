@@ -28,10 +28,16 @@ public class OrderController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PutMapping("/update")
-    public Order updateOrder(@RequestBody Order order) {
-
-        return orderService.updateOrder(order);
+    @PutMapping("update")
+    public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
+        try {
+            Order updatedOrder = orderService.updateOrder(order);
+            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error updating order: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PostMapping("/cancel/{orderId}")
     public <T> ResponseEntity<T> deleteOrderById(@RequestParam Integer id) throws Exception {
