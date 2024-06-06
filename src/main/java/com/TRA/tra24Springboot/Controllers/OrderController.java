@@ -18,9 +18,15 @@ public class OrderController {
     @Autowired
     OrderService orderService;
     @PostMapping("create")
-    public Order createOrder(@RequestBody Order order) {
-
-        return orderService.createOrder(order);
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        try {
+            Order createdOrder = orderService.createOrder(order);
+            return new ResponseEntity<>(createdOrder, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error creating order: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PutMapping("/update")
     public Order updateOrder(@RequestBody Order order) {
