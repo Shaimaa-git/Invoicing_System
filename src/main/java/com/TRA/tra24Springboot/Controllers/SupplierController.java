@@ -18,13 +18,27 @@ public class SupplierController {
     SupplierService supplierService;
 
     @PostMapping("add")
-    public Supplier addSupplier(@RequestBody Supplier supplierDetails) {
-        return supplierService.addSupplier(supplierDetails);
+    public ResponseEntity<Supplier> addSupplier(@RequestBody Supplier supplierDetails) {
+        try {
+            Supplier addedSupplier = supplierService.addSupplier(supplierDetails);
+            return new ResponseEntity<>(addedSupplier, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error adding supplier: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("update")
-    public Supplier updateSupplier(@RequestBody Supplier supplierUpdating) {
-        return supplierService.updateSupplier(supplierUpdating);
+    public ResponseEntity<Supplier> updateSupplier(@RequestBody Supplier supplierUpdating) {
+        try {
+            Supplier updatedSupplier = supplierService.updateSupplier(supplierUpdating);
+            return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error updating supplier: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("delete/{id}")
@@ -37,9 +51,15 @@ public class SupplierController {
         }
     }
     @GetMapping("get")
-    public Supplier reportSupplier(){
-
-        return supplierService.reportSupplier();
+    public ResponseEntity<Supplier> reportSupplier() {
+        try {
+            Supplier reportedSupplier = supplierService.reportSupplier();
+            return new ResponseEntity<>(reportedSupplier, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error reporting supplier: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 
