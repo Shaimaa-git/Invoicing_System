@@ -1,6 +1,7 @@
 package com.TRA.tra24Springboot.Services;
 
 import com.TRA.tra24Springboot.Models.Inventory;
+import com.TRA.tra24Springboot.Models.Order;
 import com.TRA.tra24Springboot.Models.Product;
 import com.TRA.tra24Springboot.Repository.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class InventoryService {
         inventoryFromDb.setIsActive(Boolean.FALSE);
         inventoryRepository.save(inventoryFromDb);
         return "Success";
+    }
+    public Inventory updateStock(@RequestBody Inventory inventory) {
+        inventory.setUpdatedDate(new Date());
+        return inventoryRepository.save(inventory) ;
     }
 
 }
