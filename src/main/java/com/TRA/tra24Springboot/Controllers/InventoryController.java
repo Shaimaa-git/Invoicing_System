@@ -1,5 +1,6 @@
 package com.TRA.tra24Springboot.Controllers;
 import com.TRA.tra24Springboot.Models.Inventory;
+import com.TRA.tra24Springboot.Models.Order;
 import com.TRA.tra24Springboot.Services.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,17 @@ public class InventoryController {
             return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return (ResponseEntity<T>) new ResponseEntity<>("Deleting failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("update")
+    public ResponseEntity<Inventory> updateStock(@RequestBody Inventory inventory) {
+        try {
+            Inventory updatedItem = inventoryService.updateStock(inventory);
+            return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error updating stock: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
