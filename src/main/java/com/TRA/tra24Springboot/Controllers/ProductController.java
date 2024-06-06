@@ -20,11 +20,18 @@ public class ProductController {
     MailingService mailingService;
 
     @PostMapping("add")
-    public Product addProduct(@RequestBody Product product){
-        mailingService.sendSimpleMail();
-
-        return productService.saveProduct(product);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        try {
+            mailingService.sendSimpleMail();
+            Product savedProduct = productService.saveProduct(product);
+            return new ResponseEntity<>(savedProduct, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error adding product: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
     @PostMapping("deleteById")
     public <T> ResponseEntity<T> deleteProductById(@RequestParam Integer id) throws Exception {
         try {
