@@ -60,20 +60,50 @@ public class InventoryController {
         }
     }
     @GetMapping("getById")
-    public Inventory getInventoryById(@RequestParam Integer inventoryId){
-        return inventoryService.getInventoryById(inventoryId);
+    public ResponseEntity<Inventory> getInventoryById(@RequestParam Integer inventoryId) {
+        try {
+            Inventory inventory = inventoryService.getInventoryById(inventoryId);
+            return new ResponseEntity<>(inventory, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting inventory by ID: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
     @GetMapping("getByAvailability")
-    public List<Inventory> getInventoryByAvailability(@RequestParam Boolean isActive){
-        return inventoryService.getInventoryByIsActive(isActive);
+    public ResponseEntity<List<Inventory>> getInventoryByAvailability(@RequestParam Boolean isActive) {
+        try {
+            List<Inventory> inventoryList = inventoryService.getInventoryByIsActive(isActive);
+            return new ResponseEntity<>(inventoryList, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting inventory by availability: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
     @GetMapping("getByLocation")
-    public List<Inventory> getInventoryByLocation(@RequestParam String location) {
-        return inventoryService.getInventoryByLocation(location);
+    public ResponseEntity<List<Inventory>> getInventoryByLocation(@RequestParam String location) {
+        try {
+            List<Inventory> inventoryList = inventoryService.getInventoryByLocation(location);
+            return new ResponseEntity<>(inventoryList, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting inventory by location: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("getByAdmin")
-    public List<Inventory> getInventoryByManagerName(@RequestParam String manager){
-        return inventoryService.getInventoryByManagerName(manager);
+    public ResponseEntity<List<Inventory>> getInventoryByManagerName(@RequestParam String manager) {
+        try {
+            List<Inventory> inventoryList = inventoryService.getInventoryByManagerName(manager);
+            return new ResponseEntity<>(inventoryList, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting inventory by manager name: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
