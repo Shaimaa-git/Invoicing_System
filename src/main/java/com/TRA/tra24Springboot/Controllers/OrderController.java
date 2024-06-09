@@ -1,5 +1,6 @@
 package com.TRA.tra24Springboot.Controllers;
 
+import com.TRA.tra24Springboot.Models.PaymentType;
 import com.TRA.tra24Springboot.Repository.OrderRepository;
 import com.TRA.tra24Springboot.Models.Order;
 import com.TRA.tra24Springboot.Models.OrderStatus;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -47,5 +49,66 @@ public class OrderController {
         } catch (Exception e) {
             return (ResponseEntity<T>) new ResponseEntity<>("Deleting failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("getById")
+    public ResponseEntity<?> getOrderById(@RequestParam Integer orderId){
+        try {
+            Order order = orderService.getOrderById(orderId);
+            return  new ResponseEntity<>(order, HttpStatus.OK);
+
+        }catch (Exception e){
+            return new ResponseEntity<>("Retrieving order failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    @GetMapping("getByStatus")
+    public ResponseEntity<?>  getOrderByStatus(@RequestParam OrderStatus orderStatus){
+        try {
+            List<Order> orders= orderService.getOrderByStatus(orderStatus);
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Retrieving orders by status failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("getByPaymentStatus")
+    public ResponseEntity<?> getOrderByPaymentStatus(@RequestParam PaymentStatus paymentStatus){
+        try {
+            List<Order> orders= orderService.getOrderByPaymentStatus(paymentStatus);
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Retrieving orders by payment status  failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+    @GetMapping("getByPaymentType")
+    public ResponseEntity<?> getOrderByPaymentType(@RequestParam PaymentType paymentType){
+        try {
+            List<Order>orders =orderService.getOrderByPaymentType(paymentType);
+            return  new ResponseEntity<>(orders,HttpStatus.OK);
+
+        }catch (Exception e){
+            return  new ResponseEntity<>("Retrieving orders by payment type failed!"+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("getByCategoryName")
+    public ResponseEntity<?> getOrderByPaymentType(@RequestParam String categoryName){
+        try {
+            List<Order> orders =orderService.getOrderByCategoryName(categoryName);
+            return  new ResponseEntity<>(orders,HttpStatus.OK);
+
+        }catch (Exception e){
+            return  new ResponseEntity<>("Retrieving orders by category Name failed!"+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("getByIsActive")
+    public ResponseEntity<?> getOrderByIsActive(@RequestParam Boolean isActive) {
+
+        try {
+            List<Order> orders= orderService.getOrderByIsActive(isActive);
+            return  new ResponseEntity<>(orders,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Retrieving orders by isActive failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
