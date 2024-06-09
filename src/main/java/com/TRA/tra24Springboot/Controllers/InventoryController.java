@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-
+import java.util.List;
 
 
 @RestController
@@ -58,5 +58,22 @@ public class InventoryController {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("getById")
+    public Inventory getInventoryById(@RequestParam Integer inventoryId){
+        return inventoryService.getInventoryById(inventoryId);
+    }
+    @GetMapping("getByAvailability")
+    public List<Inventory> getInventoryByAvailability(@RequestParam Boolean isActive){
+        return inventoryService.getInventoryByIsActive(isActive);
+    }
+    @GetMapping("getByLocation")
+    public List<Inventory> getInventoryByLocation(@RequestParam String location) {
+        return inventoryService.getInventoryByLocation(location);
+    }
+
+    @GetMapping("getByAdmin")
+    public List<Inventory> getInventoryByManagerName(@RequestParam String manager){
+        return inventoryService.getInventoryByManagerName(manager);
     }
 }

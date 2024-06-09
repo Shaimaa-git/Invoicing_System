@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
+import java.util.List;
+
 @Service
 public class InventoryService {
     @Autowired
@@ -42,6 +44,18 @@ public class InventoryService {
     public Inventory updateStock(@RequestBody Inventory inventory) {
         inventory.setUpdatedDate(new Date());
         return inventoryRepository.save(inventory) ;
+    }
+    public Inventory getInventoryById(Integer inventoryId){
+        return inventoryRepository.getByInventoryId(inventoryId);
+    }
+    public List<Inventory> getInventoryByIsActive(Boolean isActive) {
+        return inventoryRepository.getInventoryByAvailability(isActive);
+    }
+    public List<Inventory> getInventoryByLocation(String location){
+        return inventoryRepository.getInventoryByLocation(location);
+    }
+    public List<Inventory> getInventoryByManagerName(String manager){
+        return inventoryRepository.getInventoryByManagerName(manager);
     }
 
 }
