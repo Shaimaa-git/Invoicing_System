@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -31,37 +32,75 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("deleteById")
-    public <T> ResponseEntity<T> deleteProductById(@RequestParam Integer id) throws Exception {
+    @GetMapping("getByCountry")
+    public ResponseEntity<List<Product>> getProductByCountryOfOrigin(@RequestParam String country) {
         try {
-            String result = productService.deleteProductById(id);
-            return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
+            List<Product> products = productService.getProductByCountryOfOrigin(country);
+            return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
-            return (ResponseEntity<T>) new ResponseEntity<>("Deleting failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @PostMapping("deleteByName")
-    public <T> ResponseEntity<T> deleteProductByName(@RequestParam String productName) throws Exception{
-        try {
-            String result = productService.deleteProductByName(productName);
-            return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e){
-            return (ResponseEntity<T>) new ResponseEntity<>("Deleting failed! " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("update")
-    public ResponseEntity<String> updateProduct(@RequestBody Product product) {
-        try {
-            product.setUpdatedDate(new Date());
-            String result = productService.updateProductQuantity(product.getId(), product.getQuantity());
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            System.err.println("Error updating product: " + e.getMessage());
+            System.err.println("Error getting product by country of origin: " + e.getMessage());
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @GetMapping("getBySize")
+    public ResponseEntity<List<Product>> getProductBySize(@RequestParam String size) {
+        try {
+            List<Product> products = productService.getProductBySize(size);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting product by size: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("getByColor")
+    public ResponseEntity<List<Product>> getProductByColor(@RequestParam String color) {
+        try {
+            List<Product> products = productService.getProductByColor(color);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting product by color: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("getByCategory")
+    public ResponseEntity<List<Product>> getProductByCategory(@RequestParam String category) {
+        try {
+            List<Product> products = productService.getProductByCategory(category);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting product by category: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("getByPrice")
+    public ResponseEntity<List<Product>> getProductByPrice(@RequestParam Double price) {
+        try {
+            List<Product> products = productService.getProductByPrice(price);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting product by price: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("getByAvailability")
+    public ResponseEntity<List<Product>> getProductByAvailability(@RequestParam Boolean isActive) {
+        try {
+            List<Product> products = productService.getProductByAvailability(isActive);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Error getting product by availability: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
