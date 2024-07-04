@@ -9,6 +9,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
           Product product=new Product();
           invoice.setIsActive(Boolean.TRUE);
           invoice.setCreatedDate(new Date());
-          invoice.setDueDate(new Date());
+          invoice.setDueDate(LocalDate.now().plusDays(30));
           Product products=productService.saveProduct(product);
           invoice.setListOfProduct(Arrays.asList(products));
 
@@ -33,9 +34,12 @@ import java.util.List;
           return invoiceRepository.save(invoice);
     }
     public  Invoice  getInvoiceById(Integer id){
+
           return invoiceRepository.getByInvoiceId(id);
     }
-
-
+    public List<Invoice> findInvoicesDueInNextDays(int days) {
+        LocalDate dueDateThreshold = LocalDate.now().plusDays(days);
+        return invoiceRepository.findByDueDateBefore(dueDateThreshold);
+    }
 }
 
