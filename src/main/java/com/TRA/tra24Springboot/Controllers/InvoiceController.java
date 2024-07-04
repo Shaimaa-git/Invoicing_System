@@ -33,4 +33,13 @@ public class InvoiceController {
             slackService.sendMessage("shaimaa", message);
         }
     }
+    @GetMapping("/OverDue")
+    @Scheduled(cron = "0 0 10 * * ?")  // every day at 10 AM
+    public void sendOverdueAlerts() {
+        List<Invoice> overdueInvoices = invoiceService.findOverdueInvoices();
+        for (Invoice invoice : overdueInvoices) {
+            String message = "Alert: Invoice " + invoice.getId() + " is overdue. Due date was " + invoice.getDueDate();
+            slackService.sendMessage("shaimaa", message);
+        }
+    }
 }

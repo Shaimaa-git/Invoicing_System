@@ -21,4 +21,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     Invoice getByInvoiceCreatedDate(@Param("invoiceCreatedDate") Date invoiceCreatedDate);
 
     List<Invoice> findByDueDateBefore(LocalDate dueDate);
+    List<Invoice> findByDueDateBeforeAndIsActive(LocalDate dueDate, Boolean isActive);
 }

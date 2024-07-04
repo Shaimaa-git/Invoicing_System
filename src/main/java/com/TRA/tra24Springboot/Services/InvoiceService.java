@@ -41,5 +41,9 @@ import java.util.List;
         LocalDate dueDateThreshold = LocalDate.now().plusDays(days);
         return invoiceRepository.findByDueDateBefore(dueDateThreshold);
     }
+    public List<Invoice> findOverdueInvoices() {
+        LocalDate today = LocalDate.now();
+        return invoiceRepository.findByDueDateBeforeAndIsActive(today, true);
+    }
 }
 
