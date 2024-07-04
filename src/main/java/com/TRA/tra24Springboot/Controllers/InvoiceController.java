@@ -68,4 +68,30 @@ public class InvoiceController {
 
         slackService.sendMessage("shaimaa", report.toString());
     }
+    @GetMapping("/monthlyAlert")
+    @Scheduled(cron = "0 55 10 4 * ?")  // every 1st day of the month at 9 AM
+    public void sendMonthlyPerformanceReport() {
+        List<Invoice> createdInvoices = invoiceService.findInvoicesCreatedInLastMonth();
+        List<Invoice> paidInvoices = invoiceService.findPaidInvoicesInLastMonth();
+        List<Invoice> overdueInvoices = invoiceService.findOverdueInvoicesInLastMonth();
+
+        StringBuilder report = new StringBuilder("Monthly Performance Report:\n\n");
+
+        report.append("Created Invoices:\n");
+        for (Invoice invoice : createdInvoices) {
+            report.append("Invoice ID: ").append(invoice.getId()).append(", Due Date: ").append(invoice.getDueDate()).append("\n");
+        }
+
+        report.append("\nPaid Invoices:\n");
+        for (Invoice invoice : paidInvoices) {
+            report.append("Invoice ID: ").append(invoice.getId()).append(", Paid Amount: ").append(invoice.getPaidAmount()).append("\n");
+        }
+
+        report.append("\nOverdue Invoices:\n");
+        for (Invoice invoice : overdueInvoices) {
+            report.append("Invoice ID: ").append(invoice.getId()).append(", Due Date: ").append(invoice.getDueDate()).append("\n");
+        }
+
+        slackService.sendMessage("shaimaa", report.toString());
+    }
 }

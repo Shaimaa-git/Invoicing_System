@@ -62,5 +62,22 @@ import java.util.List;
         LocalDate lastWeek = today.minusDays(7);
         return invoiceRepository.findByDueDateBeforeAndCreatedDateBetween(today, lastWeek, today);
     }
+    public List<Invoice> findInvoicesCreatedInLastMonth() {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
+        return invoiceRepository.findByCreatedDateBetween(firstDayOfMonth, today);
+    }
+
+    public List<Invoice> findPaidInvoicesInLastMonth() {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
+        return invoiceRepository.findByPaidAmountGreaterThanAndCreatedDateBetween(0.0, firstDayOfMonth, today);
+    }
+
+    public List<Invoice> findOverdueInvoicesInLastMonth() {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
+        return invoiceRepository.findByDueDateBeforeAndCreatedDateBetween(today, firstDayOfMonth, today);
+    }
 }
 
