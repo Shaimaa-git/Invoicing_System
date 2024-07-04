@@ -6,6 +6,8 @@ import com.TRA.tra24Springboot.Models.ProductDetails;
 import com.TRA.tra24Springboot.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -100,5 +102,15 @@ public class ProductService {
 
     public List<Product> getProductByAvailability(Boolean isActive){
         return productRepository.getProductByAvailability(isActive);
+    }
+    public List<Product> getLowStockProducts() {
+        List<Product> products = productRepository.findAll();
+        List<Product> lowStockProducts = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getQuantity() < 50) {
+                lowStockProducts.add(product);
+            }
+        }
+        return lowStockProducts;
     }
 }

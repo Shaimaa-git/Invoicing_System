@@ -3,10 +3,12 @@ package com.TRA.tra24Springboot.Controllers;
 import com.TRA.tra24Springboot.Models.Product;
 import com.TRA.tra24Springboot.Services.MailingService;
 import com.TRA.tra24Springboot.Services.ProductService;
+import com.TRA.tra24Springboot.Services.SlackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -20,6 +22,9 @@ public class ProductController {
     @Autowired
     MailingService mailingService;
 
+    @Autowired
+    SlackService slackService;
+
     @PostMapping("add")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         try {
@@ -32,6 +37,7 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("getByCountry")
     public ResponseEntity<List<Product>> getProductByCountryOfOrigin(@RequestParam String country) {
         try {
@@ -103,4 +109,24 @@ public class ProductController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/checkStock")
+    @Scheduled(cron = "0 0 9/6 * * *")
+    public List<Product> getLowStockReport() {
+
+        List<Product> lowStockProducts = productService.getLowStockProducts();
+        if (!lowStockProducts.isEmpty()) {
+            StringBuilder messageBuilder = new StringBuilder();
+            messageBuilder.append("Low stock alert:\n");
+            for (Product product : lowStockProducts) {
+                messageBuilder.append("Product ID: ").append(product.getId())
+                        .append(", Product: ").append(product.getProductDetails().getName())
+                        .append(", Quantity: ").append(product.getQuantity()).append("\n");
+            }
+            slackService.sendMessage("shaimaa", messageBuilder.toString());
+        }
+        return lowStockProducts;
+    }
+
 }
+
