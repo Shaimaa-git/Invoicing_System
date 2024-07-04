@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     @Query("SELECT in from Invoice in WHERE in.Id =:invoiceId")
@@ -18,4 +20,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     @Query("SELECT in from Invoice in WHERE in.dueDate =:invoiceCreatedDate")
     Invoice getByInvoiceCreatedDate(@Param("invoiceCreatedDate") Date invoiceCreatedDate);
 
+    List<Invoice> findByDueDateBefore(LocalDate dueDate);
 }
