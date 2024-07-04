@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/slack")
+
 public class slackController {
     @Autowired
     SlackService slackService;
