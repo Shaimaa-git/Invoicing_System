@@ -9,6 +9,7 @@ import lombok.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -20,7 +21,7 @@ public class BaseEntity {
     Integer id;
 
     @CreatedDate
-    Date createdDate;
+    LocalDate createdDate;
 
     @UpdateTimestamp
     Date updatedDate;

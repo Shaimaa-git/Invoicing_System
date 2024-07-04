@@ -22,4 +22,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
 
     List<Invoice> findByDueDateBefore(LocalDate dueDate);
     List<Invoice> findByDueDateBeforeAndIsActive(LocalDate dueDate, Boolean isActive);
+    List<Invoice> findByCreatedDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Invoice> findByPaidAmountGreaterThanAndCreatedDateBetween(double paidAmount, LocalDate startDate, LocalDate endDate);
+    List<Invoice> findByDueDateBeforeAndCreatedDateBetween(LocalDate dueDate, LocalDate startDate, LocalDate endDate);
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class InventoryService {
     InventoryRepository inventoryRepository;
     public Inventory saveReceiveStock(@RequestBody Inventory inventoryItem) {
         inventoryItem.setId(1);
-        inventoryItem.setCreatedDate(new Date());
+        inventoryItem.setCreatedDate(LocalDate.now().plusDays(30));
         inventoryItem.setUpdatedDate(new Date());
         inventoryItem.setPhoneNumber("91767067");
         inventoryItem.setClosingHours("10:00 PM");

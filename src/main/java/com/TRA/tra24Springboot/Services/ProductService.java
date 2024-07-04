@@ -7,6 +7,7 @@ import com.TRA.tra24Springboot.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ProductService {
     public Product saveProduct(Product product){
         product.setSku(UUID.randomUUID());
         product.setIsActive(Boolean.TRUE);
-        product.setCreatedDate(new Date());
+        product.setCreatedDate(LocalDate.now().plusDays(30));
         product.setUpdatedDate(new Date());
         ProductDetails productDetails=productDetailsService.saveProductDetails(product.getProductDetails());
         product.setProductDetails(productDetails);

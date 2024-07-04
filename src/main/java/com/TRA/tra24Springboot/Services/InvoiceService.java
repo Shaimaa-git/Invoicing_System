@@ -24,7 +24,7 @@ import java.util.List;
       public Invoice createInvoice(Invoice invoice){
           Product product=new Product();
           invoice.setIsActive(Boolean.TRUE);
-          invoice.setCreatedDate(new Date());
+          invoice.setCreatedDate(LocalDate.now().plusDays(30));
           invoice.setDueDate(LocalDate.now().plusDays(30));
           Product products=productService.saveProduct(product);
           invoice.setListOfProduct(Arrays.asList(products));
@@ -44,6 +44,23 @@ import java.util.List;
     public List<Invoice> findOverdueInvoices() {
         LocalDate today = LocalDate.now();
         return invoiceRepository.findByDueDateBeforeAndIsActive(today, true);
+    }
+    public List<Invoice> findInvoicesCreatedInLastWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(7);
+        return invoiceRepository.findByCreatedDateBetween(lastWeek, today);
+    }
+
+    public List<Invoice> findPaidInvoicesInLastWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(7);
+        return invoiceRepository.findByPaidAmountGreaterThanAndCreatedDateBetween(0.0, lastWeek, today);
+    }
+
+    public List<Invoice> findOverdueInvoicesInLastWeek() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastWeek = today.minusDays(7);
+        return invoiceRepository.findByDueDateBeforeAndCreatedDateBetween(today, lastWeek, today);
     }
 }
 

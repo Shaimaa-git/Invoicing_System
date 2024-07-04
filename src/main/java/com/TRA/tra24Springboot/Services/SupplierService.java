@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class SupplierService {
     public Supplier addSupplier(@RequestBody Supplier supplierDetails) {
         supplierDetails.setShippingMethods("Air freight");
         supplierDetails.setIsActive(Boolean.TRUE);
-        supplierDetails.setCreatedDate(new Date());
+        supplierDetails.setCreatedDate(LocalDate.now().plusDays(30));
         supplierDetails.setUpdatedDate(new Date());
         supplierDetails.setCountry("China");
         supplierDetails.setCompanyName("SSS");
