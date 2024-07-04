@@ -15,11 +15,11 @@ public class SlackService {
     @Value("${slack.token.integration}")
     private String slackToken;
     //@Scheduled(cron = "* 0/1 * * * *") //testing cron
-    public  void  sendSchduledMessge(){
-        String channel = "#shaimaa";
-        String message = "Testing CRON";
-        sendMessageCRON(channel,message);
-    }
+//    public  void  sendSchduledMessge(){
+//        String channel = "#shaimaa";
+//        String message = "Testing CRON";
+//        sendMessageCRON(channel,message);
+//    }
     public void sendMessageCRON( String channel, String message) {
         Slack slack = Slack.getInstance();
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
@@ -40,8 +40,8 @@ public class SlackService {
     public void sendMessage( String channel, String message) {
         Slack slack = Slack.getInstance();
 
-        channel = "#shaimaa";
-        message = "Testing";
+//        channel = "#shaimaa";
+//        message = "Testing";
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
                 .channel(channel)
                 .text(message)
