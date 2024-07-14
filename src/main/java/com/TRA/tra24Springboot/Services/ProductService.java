@@ -22,7 +22,7 @@ public class ProductService {
     public Product saveProduct(Product product){
         product.setSku(UUID.randomUUID());
         product.setIsActive(Boolean.TRUE);
-        product.setCreatedDate(LocalDate.now().plusDays(30));
+        product.setCreatedDate(new Date());
         product.setUpdatedDate(new Date());
         ProductDetails productDetails=productDetailsService.saveProductDetails(product.getProductDetails());
         product.setProductDetails(productDetails);

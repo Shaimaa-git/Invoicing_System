@@ -1,12 +1,14 @@
 package com.TRA.tra24Springboot.Models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
 @Entity
+@Builder
 public class User extends BaseEntity {
 
     String name;

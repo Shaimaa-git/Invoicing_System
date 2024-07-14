@@ -5,6 +5,7 @@ import com.TRA.tra24Springboot.Models.OrderStatus;
 import com.TRA.tra24Springboot.Models.PaymentStatus;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ public class OrderDTO {
     Integer orderID;
     OrderStatus orderStatus;
     PaymentStatus paymentStatus;
-    Date orderDate;
+    LocalDate orderDate;
 
     public static OrderDTO convertToDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();

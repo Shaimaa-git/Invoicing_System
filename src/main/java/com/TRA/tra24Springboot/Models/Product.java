@@ -1,6 +1,8 @@
 package com.TRA.tra24Springboot.Models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
@@ -12,8 +14,8 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Builder
 public class Product extends BaseEntity {
-
 
     Integer quantity;
     String category;

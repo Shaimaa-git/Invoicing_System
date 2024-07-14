@@ -12,8 +12,7 @@ public class ProductDetailsService {
     @Autowired
     ProductsDetailsRepository productsDetailsRepository;
     public ProductDetails saveProductDetails(ProductDetails productDetails){
-        productDetails=new ProductDetails();
-        productDetails.setCreatedDate(LocalDate.now().plusDays(30));
+        productDetails.setCreatedDate(new Date());
         productDetails.setExpiryDate(new Date());
         productDetails.setIsActive(Boolean.TRUE);
         productDetails.setDescription("make you full of energy");

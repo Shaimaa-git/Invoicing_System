@@ -22,11 +22,11 @@ import java.util.List;
         ProductService productService;
 
       public Invoice createInvoice(Invoice invoice){
-          Product product=new Product();
+
           invoice.setIsActive(Boolean.TRUE);
-          invoice.setCreatedDate(LocalDate.now().plusDays(30));
+          invoice.setCreatedDate(new Date());
           invoice.setDueDate(LocalDate.now().plusDays(30));
-          Product products=productService.saveProduct(product);
+          Product products=productService.saveProduct(com.TRA.tra24Springboot.Models.Product.builder().build());
           invoice.setListOfProduct(Arrays.asList(products));
 
           invoice.setPaidAmount(78.5);

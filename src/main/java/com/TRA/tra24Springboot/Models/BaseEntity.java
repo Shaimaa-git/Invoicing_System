@@ -4,6 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,14 +15,15 @@ import java.util.Date;
 
 @Data
 @MappedSuperclass
+
 public class BaseEntity {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     Integer id;
 
     @CreatedDate
-    LocalDate createdDate;
+    Date createdDate;
 
     @UpdateTimestamp
     Date updatedDate;

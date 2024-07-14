@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,14 +18,14 @@ public class OrderService {
 
     public Order createOrder(@RequestBody Order order) {
 
-        order.setOrderDate(new Date());
+        order.setOrderDate(LocalDate.now().plusDays(30));
         order.setStatus(OrderStatus.IN_PROGRESS);
         order.setPaymentStatus(PaymentStatus.PAID);
         return orderRepository.save(order);
     }
 
     public Order updateOrder(@RequestBody Order order) {
-        order.setOrderDate(new Date());
+        order.setOrderDate(LocalDate.now().plusDays(30));
         return orderRepository.save(order);
     }
 

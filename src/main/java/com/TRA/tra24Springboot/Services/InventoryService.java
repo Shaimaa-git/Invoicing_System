@@ -18,7 +18,7 @@ public class InventoryService {
     InventoryRepository inventoryRepository;
     public Inventory saveReceiveStock(@RequestBody Inventory inventoryItem) {
         inventoryItem.setId(1);
-        inventoryItem.setCreatedDate(LocalDate.now().plusDays(30));
+        inventoryItem.setCreatedDate(new Date());
         inventoryItem.setUpdatedDate(new Date());
         inventoryItem.setPhoneNumber("91767067");
         inventoryItem.setClosingHours("10:00 PM");

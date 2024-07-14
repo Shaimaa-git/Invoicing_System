@@ -18,11 +18,10 @@ import java.util.List;
 public class SupplierService {
     @Autowired
     SupplierRepository supplierRepository;
-    Supplier supplier = new Supplier();
     public Supplier addSupplier(@RequestBody Supplier supplierDetails) {
         supplierDetails.setShippingMethods("Air freight");
         supplierDetails.setIsActive(Boolean.TRUE);
-        supplierDetails.setCreatedDate(LocalDate.now().plusDays(30));
+        supplierDetails.setCreatedDate(new Date());
         supplierDetails.setUpdatedDate(new Date());
         supplierDetails.setCountry("China");
         supplierDetails.setCompanyName("SSS");
@@ -32,7 +31,6 @@ public class SupplierService {
         supplierDetails.setPaymentMethods("cache");
         supplierDetails.setNextDeliveryTime(new Date());
 
-        supplier = supplierDetails;
         return supplierRepository.save(supplierDetails);
     }
     public Supplier updateSupplier(@RequestBody Supplier supplierUpdating) {
@@ -44,7 +42,7 @@ public class SupplierService {
         supplierUpdating.setContactDetails(pd);
         supplierUpdating.setUpdatedDate(new Date());
 
-        supplier = supplierUpdating;
+
         return supplierRepository.save(supplierUpdating);
     }
     public String deleteSupplier(@PathVariable Integer supplierId) {
@@ -58,7 +56,7 @@ public class SupplierService {
     }
     public Supplier reportSupplier(){
 
-        return supplierRepository.save(supplier);
+        return supplierRepository.save(Supplier.builder().build());
     }
     public List<Supplier> getSupplierByCompanyName (String companyName) throws  Exception{
         try {
