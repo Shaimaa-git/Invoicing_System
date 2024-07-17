@@ -17,9 +17,9 @@ import java.util.UUID;
 @Builder
 public class Product extends BaseEntity {
 
-    Integer quantity;
-    String category;
-    UUID sku;
+    public Integer quantity;
+    public String category;
+    public UUID sku;
     @OneToOne
     @Cascade(CascadeType.ALL)
     ProductDetails productDetails;
