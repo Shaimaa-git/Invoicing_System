@@ -16,7 +16,7 @@ public class OrderDTO {
     Integer orderID;
     OrderStatus orderStatus;
     PaymentStatus paymentStatus;
-    LocalDate orderDate;
+    Date orderDate;
 
     public static OrderDTO convertToDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
