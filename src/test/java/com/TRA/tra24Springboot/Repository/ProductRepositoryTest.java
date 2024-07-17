@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,88 +21,105 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class ProductRepositoryTest {
-
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private  ProductsDetailsRepository productDetailsRepository;
+    private ProductsDetailsRepository productDetailsRepository;
+
+    private UUID sku;
+    Integer productId;
     @BeforeEach
-    void setUp() {
-        ProductDetails details1 = ProductDetails.builder()
-                .name("Springfield Elementary")
-                .color("Red")
-                .price(10.0)
-                .countryOfOrigin("USA")
-                .size("Large")
-                .expiryDate(new Date())
-                .description("Educational Institution")
-
+    void setupProduct(){
+        ProductDetails productDetails = ProductDetails.builder()
+                .name("Screen")
+                .color("Black")
+                .countryOfOrigin("Japan")
+                .price(200.0)
+                .size("24 inches")
                 .build();
-        details1.setCreatedDate(new Date());
-        details1.setIsActive(Boolean.TRUE);
-        productDetailsRepository.save(details1);
+
+        productDetailsRepository.save(productDetails);
+
+        sku = UUID.randomUUID();
+
+        Product product = Product.builder()
+                .productDetails(productDetails)
+                .category("Electronics")
+                .quantity(50)
+                .sku(sku)
+                .build();
+        product.setIsActive(Boolean.TRUE);
+        productId = productRepository.save(product).getId();
     }
 
     @Test
-    void getByProductName() {
-        List<Product> products = productRepository.getProductByName("Springfield Elementary");
-        assertNotNull(products);
-        assertEquals(1, products.size());
-        assertEquals("Springfield Elementary", products.get(0).getProductDetails().getName());
+    void getProductById(){
+        Product productById = productRepository.findById(productId).orElse(null);
+        assertThat(productById).isNotNull();
+        assertThat(productById.getId()).isEqualTo(productId);
+
     }
     @Test
-    void getProductByID() {
-        Product product = productRepository.findById(productRepository.findAll().get(0).getId()).orElse(null);
-        assertNotNull(product);
-        assertEquals("Springfield Elementary", product.getProductDetails().getName());
+    void getProductByName() {
+        List<Product> product = productRepository.getProductByName("Screen");
+        assertThat(product).isNotNull();
+        assertThat(product.size()).isEqualTo(1);
     }
 
     @Test
     void getProductByCountryOfOrigin() {
-        List<Product> products = productRepository.getProductByCountryOfOrigin("Oman");
-        assertNotNull(products);
-        assertEquals(1, products.size());
-        assertEquals("Oman", products.get(0).getProductDetails().getCountryOfOrigin());
+        List<Product> productsFromCountry = productRepository.getProductByCountryOfOrigin("Japan");
+        assertThat(productsFromCountry).isNotNull();
+        assertThat(productsFromCountry.size()).isEqualTo(1);
+        assertThat(productsFromCountry.get(0).getProductDetails().getCountryOfOrigin()).isEqualTo("Japan");
     }
 
     @Test
     void getProductBySize() {
-        List<Product> products = productRepository.getProductBySize("Large");
-        assertNotNull(products);
-        assertEquals(1, products.size());
-        assertEquals("Large", products.get(0).getProductDetails().getSize());
+        List<Product> productsOfSize = productRepository.getProductBySize("24 inches");
+        assertThat(productsOfSize).isNotNull();
+        assertThat(productsOfSize.size()).isEqualTo(1);
+        assertThat(productsOfSize.get(0).getProductDetails().getSize()).isEqualTo("24 inches");
     }
 
     @Test
     void getProductByColor() {
-        List<Product> products = productRepository.getProductByColor("Blue");
-        assertNotNull(products);
-        assertEquals(1, products.size());
-        assertEquals("Blue", products.get(0).getProductDetails().getColor());
+        List<Product> productsOfColor = productRepository.getProductByColor("Black");
+        assertThat(productsOfColor).isNotNull();
+        assertThat(productsOfColor.size()).isEqualTo(1);
+        assertThat(productsOfColor.get(0).getProductDetails().getColor()).isEqualTo("Black");
     }
 
+    @Test
+    void getProductBySKU() {
+        Product product = productRepository.getProductBySKU(sku);
+        assertThat(product).isNotNull();
+        assertThat(product.getSku()).isEqualTo(sku);
+        assertThat(product.getProductDetails().getName()).isEqualTo("Screen");
+    }
 
     @Test
     void getProductByCategory() {
-        List<Product> products = productRepository.getProductByCategory("Education");
-        assertNotNull(products);
-        assertEquals(1, products.size());
-        assertEquals("Education", products.get(0).getCategory());
+        List<Product> productsOfCategory = productRepository.getProductByCategory("Electronics");
+        assertThat(productsOfCategory).isNotNull();
+        assertThat(productsOfCategory.size()).isEqualTo(1);
+        assertThat(productsOfCategory.get(0).getCategory()).isEqualTo("Electronics");
     }
 
     @Test
     void getProductByPrice() {
-        List<Product> products = productRepository.getProductByPrice(15.0);
-        assertNotNull(products);
-        assertEquals(1, products.size());
-        assertEquals(15.0, products.get(0).getProductDetails().getPrice());
+        List<Product> productsOfPrice = productRepository.getProductByPrice(200.0);
+        assertThat(productsOfPrice).isNotNull();
+        assertThat(productsOfPrice.size()).isEqualTo(1);
+        assertThat(productsOfPrice.get(0).getProductDetails().getPrice()).isEqualTo(200.0);
     }
 
     @Test
     void getProductByAvailability() {
         List<Product> productsAvailability = productRepository.getProductByAvailability(Boolean.TRUE);
         assertThat(productsAvailability).isNotNull();
-        assertThat(productsAvailability.size()).isEqualTo(2);
+        assertThat(productsAvailability.size()).isEqualTo(1);
         assertThat(productsAvailability.get(0).getIsActive()).isEqualTo(Boolean.TRUE);
     }
+
 }
