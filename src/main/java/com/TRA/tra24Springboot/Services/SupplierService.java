@@ -25,10 +25,10 @@ public class SupplierService {
         supplierDetails.setUpdatedDate(new Date());
         supplierDetails.setCountry("China");
         supplierDetails.setCompanyName("SSS");
-        supplierDetails.setMinimumOrderQuantity("12");
+        supplierDetails.setMinimumOrderQuantity(12);
         supplierDetails.setId(1001);
         supplierDetails.setComplaints("no complaints");
-        supplierDetails.setPaymentMethods("cache");
+        supplierDetails.setPaymentMethods(PaymentType.CASH);
         supplierDetails.setNextDeliveryTime(new Date());
 
         return supplierRepository.save(supplierDetails);
