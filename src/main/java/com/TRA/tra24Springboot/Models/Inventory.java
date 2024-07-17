@@ -15,19 +15,22 @@ import java.util.List;
 @Data
 @Entity
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Inventory extends BaseEntity {
 
 
+    @OneToMany
+    List<Product> products;
     String location;
-    String manager; //TODO: Update once user class created
-    List<String> workers; //TODO: Update user class created
-    String supplier;
+    String manager;
+    List<String> workers;
+    @OneToMany
+    List<Supplier> supplier;
     String phoneNumber;
     String openingHours;
     String closingHours;
-    LocalDate WriteOffDate;
-    @OneToMany
-    List<Product> products;
+
 
 
 
