@@ -18,6 +18,6 @@ public class Invoice extends BaseEntity {
      Double paidAmount;
      @OneToMany
      List<Product> listOfProduct;
-     LocalDate dueDate;
+     Date dueDate;
 
 }

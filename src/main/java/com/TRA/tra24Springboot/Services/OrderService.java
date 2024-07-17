@@ -18,14 +18,14 @@ public class OrderService {
 
     public Order createOrder(@RequestBody Order order) {
 
-        order.setOrderDate(LocalDate.now().plusDays(30));
+        order.setOrderDate(new Date());
         order.setStatus(OrderStatus.IN_PROGRESS);
         order.setPaymentStatus(PaymentStatus.PAID);
         return orderRepository.save(order);
     }
 
     public Order updateOrder(@RequestBody Order order) {
-        order.setOrderDate(LocalDate.now().plusDays(30));
+        order.setOrderDate(new Date());
         return orderRepository.save(order);
     }
 
