@@ -3,6 +3,7 @@ package com.TRA.tra24Springboot.Controllers;
 import com.TRA.tra24Springboot.Models.Invoice;
 import com.TRA.tra24Springboot.Services.InvoiceService;
 import com.TRA.tra24Springboot.Services.SlackService;
+import com.TRA.tra24Springboot.Utils.DateHelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -19,79 +23,102 @@ public class InvoiceController {
   InvoiceService invoiceService;
     @Autowired
     SlackService slackService;
-  @PostMapping("createInvoice")
-  public Invoice createInvoice(Invoice invoice){
-      slackService.sendMessage("shaimaa", "Invoice created successfully");
-      return invoiceService.createInvoice(invoice);
-  }
-    @GetMapping("/DueDate")
-    @Scheduled(cron = "0 0 9 * * ?")  // every day at 9 AM
-    public void sendDueReminders() {
-        List<Invoice> dueInvoices = invoiceService.findInvoicesDueInNextDays(7);  // Remind 7 days in advance
-        for (Invoice invoice : dueInvoices) {
-            String message = "Reminder: Invoice " + invoice.getId() + " is due on " + invoice.getDueDate();
-            slackService.sendMessage("shaimaa", message);
+    @PostMapping("create")
+    public Invoice createInvoice(Invoice invoice) {
+        slackService.sendMessage("shaimaa", "New invoice has been created!");
+        return invoiceService.createInvoice(invoice);
+    }
+
+    @Scheduled(cron = "0 0 9 * * ?")
+    @PostMapping("dueDate")
+    public void senDueDateReminder() {
+        Integer remainingDays = 3;
+        List<Invoice> invoices = invoiceService.getInvoiceDueInNextDays(remainingDays);
+        for (Invoice invoice : invoices) {
+            StringBuilder message = new StringBuilder();
+            message.append("Reminder: Invoice #")
+                    .append(invoice.getId())
+                    .append(" is due on ")
+                    .append(invoice.getDueDate().toString());
+            slackService.sendMessage("shaimaa", message.toString());
         }
     }
-    @GetMapping("/OverDue")
-    @Scheduled(cron = "0 0 10 * * ?")  // every day at 10 AM
-    public void sendOverdueAlerts() {
-        List<Invoice> overdueInvoices = invoiceService.findOverdueInvoices();
+
+    @Scheduled(cron = "0 0 9 * * ?")
+    @PostMapping("overdue")
+    public void sendOverdueReminder(){
+        List<Invoice> overdueInvoices = invoiceService.getOverDueInvoices();
         for (Invoice invoice : overdueInvoices) {
-            String message = "Alert: Invoice " + invoice.getId() + " is overdue. Due date was " + invoice.getDueDate();
-            slackService.sendMessage("shaimaa", message);
+            StringBuilder message = new StringBuilder();
+            message.append("Alert: Invoice #")
+                    .append(invoice.getId())
+                    .append(" is overdue since ")
+                    .append(invoice.getDueDate().toString());
+            slackService.sendMessage("shaimaa", message.toString());
         }
     }
-    @GetMapping("/weeklyReport")
-    @Scheduled(cron = "0 0 9 ? * MON")  // every Monday at 9 AM
-    public void sendWeeklySummaryReport() {
-        List<Invoice> createdInvoices = invoiceService.findInvoicesCreatedInLastWeek();
-        List<Invoice> paidInvoices = invoiceService.findPaidInvoicesInLastWeek();
-        List<Invoice> overdueInvoices = invoiceService.findOverdueInvoicesInLastWeek();
 
-        StringBuilder report = new StringBuilder("Weekly Summary Report:\n\n");
+    @Scheduled(cron = "0 0 9 * * 0") //runs every Sunday
+    @PostMapping("weeklyReport")
+    public void weeklyInvoiceReport(){
+        Date today = new Date();
+        Date startDate = DateHelperUtils.subtractDays(today, 6); //during the last 7 days
 
-        report.append("Created Invoices:\n");
-        for (Invoice invoice : createdInvoices) {
-            report.append("Invoice ID: ").append(invoice.getId()).append(", Due Date: ").append(invoice.getDueDate()).append("\n");
-        }
+        List<Invoice> createdInvoices = invoiceService.getInvoicesCreatedBetween(startDate, today);
+        List<Invoice> paidInvoices = invoiceService.getPaidInvoicesBetween(startDate, today);
+        List<Invoice> overdueInvoices = invoiceService.getOverDueInvoices();
 
-        report.append("\nPaid Invoices:\n");
-        for (Invoice invoice : paidInvoices) {
-            report.append("Invoice ID: ").append(invoice.getId()).append(", Paid Amount: ").append(invoice.getPaidAmount()).append("\n");
-        }
-
+        StringBuilder report = new StringBuilder();
+        report.append("Weekly Summary Report:\n")
+                .append("Invoices Created:\n");
+        appendInvoicesToReport(report, createdInvoices);
+        report.append("\nInvoices Paid:\n");
+        appendInvoicesToReport(report, paidInvoices);
         report.append("\nOverdue Invoices:\n");
-        for (Invoice invoice : overdueInvoices) {
-            report.append("Invoice ID: ").append(invoice.getId()).append(", Due Date: ").append(invoice.getDueDate()).append("\n");
-        }
+        appendInvoicesToReport(report, overdueInvoices);
 
         slackService.sendMessage("shaimaa", report.toString());
     }
-    @GetMapping("/monthlyAlert")
-    @Scheduled(cron = "0 55 10 4 * ?")  // every 1st day of the month at 9 AM
-    public void sendMonthlyPerformanceReport() {
-        List<Invoice> createdInvoices = invoiceService.findInvoicesCreatedInLastMonth();
-        List<Invoice> paidInvoices = invoiceService.findPaidInvoicesInLastMonth();
-        List<Invoice> overdueInvoices = invoiceService.findOverdueInvoicesInLastMonth();
 
-        StringBuilder report = new StringBuilder("Monthly Performance Report:\n\n");
+    @Scheduled(cron = "0 0 9 1 * ?") //runs on the first day of every month at 9:00 AM
+    @PostMapping("monthlyReport")
+    public void monthlyInvoiceReport(){
 
-        report.append("Created Invoices:\n");
-        for (Invoice invoice : createdInvoices) {
-            report.append("Invoice ID: ").append(invoice.getId()).append(", Due Date: ").append(invoice.getDueDate()).append("\n");
-        }
+        //calculating start and end dates for the current month
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1); //setting to the first day of the month
+        Date startDate = calendar.getTime();
 
-        report.append("\nPaid Invoices:\n");
-        for (Invoice invoice : paidInvoices) {
-            report.append("Invoice ID: ").append(invoice.getId()).append(", Paid Amount: ").append(invoice.getPaidAmount()).append("\n");
-        }
+        calendar.add(Calendar.MONTH, 1); //moving to the next month
+        calendar.add(Calendar.DAY_OF_MONTH, -1); //setting to the last day of the current month
+        Date endDate = calendar.getTime();
 
+        List<Invoice> createdInvoices = invoiceService.getInvoicesCreatedBetween(startDate, endDate);
+        List<Invoice> paidInvoices = invoiceService.getPaidInvoicesBetween(startDate, endDate);
+        List<Invoice> overdueInvoices = invoiceService.getOverDueInvoices();
+
+        StringBuilder report = new StringBuilder();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy");
+        report.append("Monthly Invoices Report - ")
+                .append(dateFormat.format(startDate))
+                .append(":\n")
+                .append("Invoices Created:\n");
+        appendInvoicesToReport(report, createdInvoices);
+        report.append("\nInvoices Paid:\n");
+        appendInvoicesToReport(report, paidInvoices);
         report.append("\nOverdue Invoices:\n");
-        for (Invoice invoice : overdueInvoices) {
-            report.append("Invoice ID: ").append(invoice.getId()).append(", Due Date: ").append(invoice.getDueDate()).append("\n");
-        }
+        appendInvoicesToReport(report, overdueInvoices);
 
         slackService.sendMessage("shaimaa", report.toString());
+    }
+
+    private void appendInvoicesToReport(StringBuilder report, List<Invoice> invoices){
+        for (Invoice invoice : invoices) {
+            report.append("Invoice #")
+                    .append(invoice.getId())
+                    .append(" - Due on ")
+                    .append(invoice.getDueDate().toString())
+                    .append("\n");
+        }
     }
 }
