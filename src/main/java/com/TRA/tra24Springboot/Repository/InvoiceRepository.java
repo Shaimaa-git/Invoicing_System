@@ -14,15 +14,27 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer> {
     @Query("SELECT in from Invoice in WHERE in.Id =:invoiceId")
     Invoice getByInvoiceId(@Param("invoiceId") Integer invoiceId);
 
-    @Query("SELECT in from Invoice in WHERE in.dueDate =:invoiceDueDate")
-    Invoice getByInvoiceDueDate(@Param("invoiceDueDate") Date invoiceDueDate);
+    @Query("SELECT v FROM Invoice v WHERE v.id =:id")
+    public Invoice getInvoiceById(@Param("id") Integer id);
 
-    @Query("SELECT in from Invoice in WHERE in.dueDate =:invoiceCreatedDate")
-    Invoice getByInvoiceCreatedDate(@Param("invoiceCreatedDate") Date invoiceCreatedDate);
+    @Query("SELECT v FROM Invoice v WHERE v.createdDate =:createdDate")
+    public List<Invoice> getInvoiceByCreatedDate(@Param("createdDate") Date createdDate);
 
-    List<Invoice> findByDueDateBefore(LocalDate dueDate);
-    List<Invoice> findByDueDateBeforeAndIsActive(LocalDate dueDate, Boolean isActive);
-    List<Invoice> findByCreatedDateBetween(LocalDate startDate, LocalDate endDate);
-    List<Invoice> findByPaidAmountGreaterThanAndCreatedDateBetween(double paidAmount, LocalDate startDate, LocalDate endDate);
-    List<Invoice> findByDueDateBeforeAndCreatedDateBetween(LocalDate dueDate, LocalDate startDate, LocalDate endDate);
+    @Query("SELECT v FROM Invoice v WHERE v.dueDate =:dueDate")
+    public List<Invoice> getInvoiceByDueDate(@Param("dueDate") Date dueDate);
+
+    @Query("SELECT v FROM Invoice v WHERE v.dueDate BETWEEN :startDate AND :endDate")
+    public List<Invoice> getInvoicesByDueDateBetween(@Param("startDate") Date startDate,
+                                                     @Param("endDate") Date endDate);
+
+    @Query("SELECT v FROM Invoice v WHERE v.dueDate < :today")
+    public List<Invoice> getOverdueInvoices(@Param("today") Date today);
+
+    @Query("SELECT v FROM Invoice v WHERE v.createdDate BETWEEN :startDate AND :endDate")
+    public List<Invoice> getInvoicesCreatedBetween(@Param("startDate") Date startDate,
+                                                   @Param("endDate") Date endDate);
+
+    @Query("SELECT v FROM Invoice v WHERE v.paymentDate BETWEEN :startDate AND :endDate")
+    public List<Invoice> getPaidInvoicesBetween(@Param("startDate") Date startDate,
+                                                @Param("endDate") Date endDate);
 }
