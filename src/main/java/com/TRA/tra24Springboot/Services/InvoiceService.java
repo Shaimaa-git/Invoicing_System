@@ -3,9 +3,8 @@ package com.TRA.tra24Springboot.Services;
 
 import com.TRA.tra24Springboot.Models.Invoice;
 import com.TRA.tra24Springboot.Models.Product;
-import com.TRA.tra24Springboot.Models.ProductDetails;
 import com.TRA.tra24Springboot.Repository.InvoiceRepository;
-import lombok.Data;
+import com.TRA.tra24Springboot.Utils.DateHelperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,64 +19,54 @@ import java.util.List;
          InvoiceRepository invoiceRepository;
         @Autowired
         ProductService productService;
+        @Autowired
+        Product product;
 
-      public Invoice createInvoice(Invoice invoice){
+    public Invoice createInvoice(Invoice invoice) {
+        invoice.setListOfProduct(Arrays.asList(productService.getProductByID(802)));
+        invoice.setCreatedDate(new Date());
+        invoice.setDueDate(new Date());
+        invoice.setTotalAmount(350.0);
 
-          invoice.setIsActive(Boolean.TRUE);
-          invoice.setCreatedDate(new Date());
-          invoice.setDueDate(LocalDate.now().plusDays(30));
-          Product products=productService.saveProduct(com.TRA.tra24Springboot.Models.Product.builder().build());
-          invoice.setListOfProduct(Arrays.asList(products));
+        Date dueDate = DateHelperUtils.addDays(invoice.getCreatedDate(), 7);
+        invoice.setDueDate(dueDate);
 
-          invoice.setPaidAmount(78.5);
-          invoice.setTotalAmount(45.6);
-          return invoiceRepository.save(invoice);
-    }
-    public  Invoice  getInvoiceById(Integer id){
-
-          return invoiceRepository.getByInvoiceId(id);
-    }
-    public List<Invoice> findInvoicesDueInNextDays(int days) {
-        LocalDate dueDateThreshold = LocalDate.now().plusDays(days);
-        return invoiceRepository.findByDueDateBefore(dueDateThreshold);
-    }
-    public List<Invoice> findOverdueInvoices() {
-        LocalDate today = LocalDate.now();
-        return invoiceRepository.findByDueDateBeforeAndIsActive(today, true);
-    }
-    public List<Invoice> findInvoicesCreatedInLastWeek() {
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(7);
-        return invoiceRepository.findByCreatedDateBetween(lastWeek, today);
+        return invoiceRepository.save(invoice);
     }
 
-    public List<Invoice> findPaidInvoicesInLastWeek() {
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(7);
-        return invoiceRepository.findByPaidAmountGreaterThanAndCreatedDateBetween(0.0, lastWeek, today);
+    public Invoice getBInvoiceById(Integer id) {
+        return invoiceRepository.getInvoiceById(id);
     }
 
-    public List<Invoice> findOverdueInvoicesInLastWeek() {
-        LocalDate today = LocalDate.now();
-        LocalDate lastWeek = today.minusDays(7);
-        return invoiceRepository.findByDueDateBeforeAndCreatedDateBetween(today, lastWeek, today);
-    }
-    public List<Invoice> findInvoicesCreatedInLastMonth() {
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
-        return invoiceRepository.findByCreatedDateBetween(firstDayOfMonth, today);
+    public List<Invoice> getInvoiceByCreatedDate(Date createdDate) {
+        return invoiceRepository.getInvoiceByCreatedDate(createdDate);
     }
 
-    public List<Invoice> findPaidInvoicesInLastMonth() {
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
-        return invoiceRepository.findByPaidAmountGreaterThanAndCreatedDateBetween(0.0, firstDayOfMonth, today);
+    public List<Invoice> getInvoiceByDueDate(Date dueDate) {
+        return invoiceRepository.getInvoiceByDueDate(dueDate);
     }
 
-    public List<Invoice> findOverdueInvoicesInLastMonth() {
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfMonth = today.withDayOfMonth(1);
-        return invoiceRepository.findByDueDateBeforeAndCreatedDateBetween(today, firstDayOfMonth, today);
+    // method to get invoices due in next few days
+    public List<Invoice> getInvoiceDueInNextDays(Integer days){
+        Date today = new Date();
+        Date dueDate = DateHelperUtils.addDays(today, days);
+        return invoiceRepository.getInvoicesByDueDateBetween(today, dueDate);
     }
+
+    //method to get overdue invoices
+    public List<Invoice> getOverDueInvoices(){
+        Date today = new Date();
+        return invoiceRepository.getOverdueInvoices(today);
+    }
+
+    //method to
+    public List<Invoice> getInvoicesCreatedBetween(Date startDate, Date endDate) {
+        return invoiceRepository.getInvoicesCreatedBetween(startDate, endDate);
+    }
+
+    public List<Invoice> getPaidInvoicesBetween(Date startDate, Date endDate) {
+        return invoiceRepository.getPaidInvoicesBetween(startDate, endDate);
+    }
+
 }
 
