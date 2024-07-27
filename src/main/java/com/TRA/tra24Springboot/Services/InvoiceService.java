@@ -1,6 +1,7 @@
 package com.TRA.tra24Springboot.Services;
 
 
+import com.TRA.tra24Springboot.Logging.TrackExecutionTime;
 import com.TRA.tra24Springboot.Models.Invoice;
 import com.TRA.tra24Springboot.Models.Product;
 import com.TRA.tra24Springboot.Repository.InvoiceRepository;
@@ -21,7 +22,7 @@ import java.util.List;
         ProductService productService;
         @Autowired
         Product product;
-
+    @TrackExecutionTime
     public Invoice createInvoice(Invoice invoice) {
         invoice.setListOfProduct(Arrays.asList(productService.getProductByID(802)));
         invoice.setCreatedDate(new Date());
@@ -33,37 +34,37 @@ import java.util.List;
 
         return invoiceRepository.save(invoice);
     }
-
+    @TrackExecutionTime
     public Invoice getBInvoiceById(Integer id) {
         return invoiceRepository.getInvoiceById(id);
     }
 
+    @TrackExecutionTime
     public List<Invoice> getInvoiceByCreatedDate(Date createdDate) {
         return invoiceRepository.getInvoiceByCreatedDate(createdDate);
     }
-
+    @TrackExecutionTime
     public List<Invoice> getInvoiceByDueDate(Date dueDate) {
         return invoiceRepository.getInvoiceByDueDate(dueDate);
     }
-
+    @TrackExecutionTime
     // method to get invoices due in next few days
     public List<Invoice> getInvoiceDueInNextDays(Integer days){
         Date today = new Date();
         Date dueDate = DateHelperUtils.addDays(today, days);
         return invoiceRepository.getInvoicesByDueDateBetween(today, dueDate);
     }
-
+    @TrackExecutionTime
     //method to get overdue invoices
     public List<Invoice> getOverDueInvoices(){
         Date today = new Date();
         return invoiceRepository.getOverdueInvoices(today);
     }
-
-    //method to
+    @TrackExecutionTime
     public List<Invoice> getInvoicesCreatedBetween(Date startDate, Date endDate) {
         return invoiceRepository.getInvoicesCreatedBetween(startDate, endDate);
     }
-
+    @TrackExecutionTime
     public List<Invoice> getPaidInvoicesBetween(Date startDate, Date endDate) {
         return invoiceRepository.getPaidInvoicesBetween(startDate, endDate);
     }

@@ -1,5 +1,6 @@
 package com.TRA.tra24Springboot.Services;
 
+import com.TRA.tra24Springboot.Logging.TrackExecutionTime;
 import com.TRA.tra24Springboot.Models.*;
 import com.TRA.tra24Springboot.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.List;
 public class OrderService {
     @Autowired
     OrderRepository orderRepository;
-
+    @TrackExecutionTime
     public Order createOrder(@RequestBody Order order) {
 
         order.setOrderDate(new Date());
@@ -23,12 +24,12 @@ public class OrderService {
         order.setPaymentStatus(PaymentStatus.PAID);
         return orderRepository.save(order);
     }
-
+    @TrackExecutionTime
     public Order updateOrder(@RequestBody Order order) {
         order.setOrderDate(new Date());
         return orderRepository.save(order);
     }
-
+    @TrackExecutionTime
     public String cancelOrder(Integer orderId) {
         Order orderFromDb = orderRepository.getOrderById(orderId);
         if (orderFromDb != null && orderFromDb.getStatus() == OrderStatus.IN_PROGRESS) {
@@ -41,6 +42,7 @@ public class OrderService {
             return "Unable to cancel order. Order may not exist or may not be cancelable.";
         }
     }
+    @TrackExecutionTime
     public Order getOrderById(Integer orderId) throws  Exception{
         try {
             Order order = orderRepository.getOrderById(orderId);
@@ -53,6 +55,7 @@ public class OrderService {
         }
 
     }
+    @TrackExecutionTime
     public List<Order> getOrderByStatus(OrderStatus orderStatus) throws Exception{
         try {
             List<Order> orders=orderRepository.getOrderByStatus(orderStatus);
@@ -65,7 +68,7 @@ public class OrderService {
         }
 
     }
-
+    @TrackExecutionTime
     public List<Order> getOrderByPaymentStatus(PaymentStatus paymentStatus) throws Exception {
         try {
             List<Order> orders = orderRepository.getOrderByPaymentStatus(paymentStatus);
@@ -77,7 +80,7 @@ public class OrderService {
             throw new Exception("Faild to retrieve orders by payment status " + e.getMessage(), e);
         }
     }
-
+    @TrackExecutionTime
     public List<Order> getOrderByPaymentType(PaymentType paymentType) throws Exception {
         try {
             List<Order> orders = orderRepository.getOrderByPaymentType(paymentType);
@@ -90,7 +93,7 @@ public class OrderService {
         }
 
     }
-
+    @TrackExecutionTime
     public List<Order> getOrderByCategoryName(String categoryName) throws Exception {
         try {
             List<Order> orders = orderRepository.getOrderByCategoryName(categoryName);
@@ -103,7 +106,7 @@ public class OrderService {
         }
 
     }
-
+    @TrackExecutionTime
     public List<Order> getOrderByIsActive(Boolean isActive) throws Exception {
         try {
             List<Order> orders = orderRepository.findByOrderByIsActive(isActive);

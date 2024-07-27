@@ -1,5 +1,6 @@
 package com.TRA.tra24Springboot.Services;
 
+import com.TRA.tra24Springboot.Logging.TrackExecutionTime;
 import com.TRA.tra24Springboot.Models.ProductDetails;
 import com.TRA.tra24Springboot.Repository.ProductsDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.Date;
 public class ProductDetailsService {
     @Autowired
     ProductsDetailsRepository productsDetailsRepository;
+    @TrackExecutionTime
     public ProductDetails saveProductDetails(ProductDetails productDetails){
         productDetails.setCreatedDate(new Date());
         productDetails.setExpiryDate(new Date());

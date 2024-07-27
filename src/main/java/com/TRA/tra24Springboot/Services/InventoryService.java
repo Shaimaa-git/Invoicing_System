@@ -1,6 +1,7 @@
 package com.TRA.tra24Springboot.Services;
 
 import com.TRA.tra24Springboot.DTO.InventoryDTO;
+import com.TRA.tra24Springboot.Logging.TrackExecutionTime;
 import com.TRA.tra24Springboot.Models.*;
 import com.TRA.tra24Springboot.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class InventoryService {
     Supplier supplier;
     @Autowired
     Product product;
+    @TrackExecutionTime
     public Inventory saveReceiveStock(@RequestBody Inventory inventory) {
 
         productDetails.setName("Laptop");
@@ -85,12 +87,14 @@ public class InventoryService {
 
         return inventoryRepository.save(inventory);
     }
+    @TrackExecutionTime
     public Inventory saveReturnStock(@RequestBody Inventory inventoryItem) {
 
         inventoryItem.setId(1);
         inventoryItem.setUpdatedDate(new Date());
         return inventoryRepository.save(inventoryItem);
     }
+    @TrackExecutionTime
     public String deleteInventoryById(Integer inventoryId){
 
         Inventory inventoryFromDb = inventoryRepository.getByInventoryId(inventoryId);
@@ -98,19 +102,23 @@ public class InventoryService {
         inventoryRepository.save(inventoryFromDb);
         return "Success";
     }
+    @TrackExecutionTime
     public Inventory updateStock(@RequestBody Inventory inventory) {
         inventory.setUpdatedDate(new Date());
         return inventoryRepository.save(inventory) ;
     }
+    @TrackExecutionTime
     public Inventory getInventoryById(Integer inventoryId){
         return inventoryRepository.getByInventoryId(inventoryId);
     }
     public List<Inventory> getInventoryByIsActive(Boolean isActive) {
         return inventoryRepository.getInventoryByAvailability(isActive);
     }
+    @TrackExecutionTime
     public List<Inventory> getInventoryByLocation(String location){
         return inventoryRepository.getInventoryByLocation(location);
     }
+    @TrackExecutionTime
     public List<Inventory> getInventoryByManagerName(String manager){
         return inventoryRepository.getInventoryByManagerName(manager);
     }
